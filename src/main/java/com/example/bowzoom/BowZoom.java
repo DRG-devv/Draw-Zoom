@@ -8,8 +8,8 @@ import net.minecraft.item.TridentItem;
 import net.minecraft.util.math.MathHelper;
 
 public final class BowZoom {
-    private static final float ZOOM_AT_FULL_CHARGE = 0.85f;
-    private static final float TRIDENT_CHARGE_TICKS = 10.0f;
+    private static final float ZOOM_AT_FULL_CHARGE = 0.70f;
+    private static final float TRIDENT_CHARGE_TICKS = 5.0f;
     private static final float SMOOTHING = 0.6f;
     private static final float EPSILON = 0.002f;
 
