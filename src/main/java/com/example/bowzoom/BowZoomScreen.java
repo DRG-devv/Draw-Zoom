@@ -3,8 +3,9 @@ package com.example.bowzoom;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.PressableWidget;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.text.Text;
 
@@ -64,7 +65,7 @@ public class BowZoomScreen extends Screen {
         MinecraftClient.getInstance().setScreen(parent);
     }
 
-    private static class InfoIcon extends ClickableWidget {
+    private static class InfoIcon extends PressableWidget {
         private static final int SIZE = 10;
         private final Runnable action;
 
@@ -80,7 +81,6 @@ public class BowZoomScreen extends Screen {
             int r = SIZE / 2;
             int color = isHovered() ? 0xFFFFFFFF : 0xFFAAAAAA;
 
-            // Draw a filled circle one row at a time
             for (int dy = -r; dy <= r; dy++) {
                 int half = (int) Math.round(Math.sqrt(r * r - dy * dy));
                 context.fill(cx - half, cy + dy, cx + half + 1, cy + dy + 1, color);
@@ -91,8 +91,12 @@ public class BowZoomScreen extends Screen {
         }
 
         @Override
-        public void onClick(double mouseX, double mouseY) {
+        public void onPress() {
             action.run();
+        }
+
+        @Override
+        protected void appendClickableNarrations(NarrationMessageBuilder builder) {
         }
     }
 
