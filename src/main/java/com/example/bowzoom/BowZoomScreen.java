@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class BowZoomScreen extends Screen {
+    private static final int BUBBLE_WIDTH = 200;
+    private static final int TEXT_WIDTH = 188;
+
     private final Screen parent;
     private int infoIndex = -1;
 
@@ -41,9 +44,9 @@ public class BowZoomScreen extends Screen {
         addDrawableChild(new Slider(x, y + 60, 200, 20, "Trident charge ticks", 1.0, 40.0,
                 BowZoomConfig.tridentChargeTicks, v -> BowZoomConfig.tridentChargeTicks = v.floatValue()));
 
-        addDrawableChild(new InfoIcon(x + 204, y + 5, () -> toggleInfo(0)));
-        addDrawableChild(new InfoIcon(x + 204, y + 35, () -> toggleInfo(1)));
-        addDrawableChild(new InfoIcon(x + 204, y + 65, () -> toggleInfo(2)));
+        addDrawableChild(new InfoIcon(x + 204, y + 2, () -> toggleInfo(0)));
+        addDrawableChild(new InfoIcon(x + 204, y + 32, () -> toggleInfo(1)));
+        addDrawableChild(new InfoIcon(x + 204, y + 62, () -> toggleInfo(2)));
 
         addDrawableChild(ButtonWidget.builder(Text.literal("Done"), b -> close())
                 .dimensions(x, y + 100, 200, 20).build());
@@ -56,12 +59,21 @@ public class BowZoomScreen extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
+
         if (infoIndex >= 0) {
-            List<OrderedText> lines = this.textRenderer.wrapLines(Text.literal(INFO[infoIndex]), this.width - 40);
-            int lineY = this.height - 20 - lines.size() * 10;
+            List<OrderedText> lines = this.textRenderer.wrapLines(
+                   Text.literal(INFO[infoIndex]), TEXT_WIDTH);
+
+            int bubbleX = this.width / 2 - BUBBLE_WIDTH / 2;
+            int bubbleY = this.height / 2 + 90;
+            int bubbleHeight = lines.size() * 10 + 10;
+
+            context.fill(bubbleX, bubbleY, bubbleX + BUBBLE_WIDTH, bubbleY + bubbleHeight, 0xDD000000);
+            context.fill(bubbleX, bubbleY, bubbleX + BUBBLE_WIDTH, bubbleY + 1, 0xFFFFFFFF);
+
+            int lineY = bubbleY + 5;
             for (OrderedText line : lines) {
-                int lineX = this.width / 2 - this.textRenderer.getWidth(line) / 2;
-                context.drawTextWithShadow(this.textRenderer, line, lineX, lineY, 0xFFFFFF);
+                context.drawTextWithShadow(this.textRenderer, line, bubbleX + 6, lineY, 0xFFFFFF);
                 lineY += 10;
             }
         }
@@ -74,7 +86,7 @@ public class BowZoomScreen extends Screen {
     }
 
     private static class InfoIcon extends PressableWidget {
-        private static final int SIZE = 10;
+        private static final int SIZE = 16;
         private final Runnable action;
 
         InfoIcon(int x, int y, Runnable action) {
@@ -95,7 +107,7 @@ public class BowZoomScreen extends Screen {
             }
 
             context.drawCenteredTextWithShadow(MinecraftClient.getInstance().textRenderer,
-                    Text.literal("i"), cx, getY() + 1, 0xFF000000);
+                    Text.literal("i"), cx, getY() + 4, 0xFF000000);
         }
 
         @Override
