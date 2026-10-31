@@ -8,9 +8,6 @@ import net.minecraft.item.TridentItem;
 import net.minecraft.util.math.MathHelper;
 
 public final class BowZoom {
-    private static final float ZOOM_AT_FULL_CHARGE = 0.70f;
-    private static final float TRIDENT_CHARGE_TICKS = 5.0f;
-    private static final float SMOOTHING = 0.6f;
     private static final float EPSILON = 0.002f;
 
     private static float previous = 1.0f;
@@ -28,7 +25,7 @@ public final class BowZoom {
         }
 
         float target = getTargetMultiplier(client);
-        current += (target - current) * SMOOTHING;
+        current += (target - current) * BowZoomConfig.zoomSpeed;
         if (Math.abs(target - current) < EPSILON) {
             current = target;
         }
@@ -57,11 +54,11 @@ public final class BowZoom {
         if (stack.getItem() instanceof BowItem) {
             charge = BowItem.getPullProgress(player.getItemUseTime());
         } else if (stack.getItem() instanceof TridentItem) {
-            charge = MathHelper.clamp(player.getItemUseTime() / TRIDENT_CHARGE_TICKS, 0.0f, 1.0f);
+            charge = MathHelper.clamp(player.getItemUseTime() / BowZoomConfig.tridentChargeTicks, 0.0f, 1.0f);
         } else {
             return 1.0f;
         }
 
-        return 1.0f - (1.0f - ZOOM_AT_FULL_CHARGE) * charge;
+        return 1.0f - (1.0f - BowZoomConfig.zoomStrength) * charge;
     }
 }
