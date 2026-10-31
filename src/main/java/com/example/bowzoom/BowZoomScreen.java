@@ -15,11 +15,16 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class BowZoomScreen extends Screen {
-    private static final int BUBBLE_WIDTH = 200;
-    private static final int TEXT_WIDTH = 188;
+    private static final int BOX_WIDTH = 150;
+    private static final int TEXT_WIDTH = 138;
+    private static final int ARROW_LENGTH = 6;
+    private static final int GAP = 8;
 
     private final Screen parent;
+
     private int infoIndex = -1;
+    private int anchorX;
+    private int anchorY;
 
     private static final String[] INFO = {
             "Zoom strength: how far the view narrows at full draw. 1.0 = no zoom, 0.7 = FOV x 0.7, lower = stronger.",
@@ -44,39 +49,78 @@ public class BowZoomScreen extends Screen {
         addDrawableChild(new Slider(x, y + 60, 200, 20, "Trident charge ticks", 1.0, 40.0,
                 BowZoomConfig.tridentChargeTicks, v -> BowZoomConfig.tridentChargeTicks = v.floatValue()));
 
-        addDrawableChild(new InfoIcon(x + 204, y + 2, () -> toggleInfo(0)));
-        addDrawableChild(new InfoIcon(x + 204, y + 32, () -> toggleInfo(1)));
-        addDrawableChild(new InfoIcon(x + 204, y + 62, () -> toggleInfo(2)));
+        int iconX = x + 204;
+        addDrawableChild(new InfoIcon(iconX, y + 2, () -> toggleInfo(0, iconX + 8, y + 10)));
+        addDrawableChild(new InfoIcon(iconX, y + 32, () -> toggleInfo(1, iconX + 8, y + 40)));
+        addDrawableChild(new InfoIcon(iconX, y + 62, () -> toggleInfo(2, iconX + 8, y + 70)));
 
         addDrawableChild(ButtonWidget.builder(Text.literal("Done"), b -> close())
                 .dimensions(x, y + 100, 200, 20).build());
     }
 
-    private void toggleInfo(int index) {
-        infoIndex = (infoIndex == index) ? -1 : index;
+    private void toggleInfo(int index, int cx, int cy) {
+        if (infoIndex == index) {
+            infoIndex = -1;
+        } else {
+            infoIndex = index;
+            anchorX = cx;
+            anchorY = cy;
+        }
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
-        if (infoIndex >= 0) {
-            List<OrderedText> lines = this.textRenderer.wrapLines(
-                   Text.literal(INFO[infoIndex]), TEXT_WIDTH);
+        if (infoIndex < 0) {
+            return;
+        }
 
-            int bubbleX = this.width / 2 - BUBBLE_WIDTH / 2;
-                        int bubbleY = 20;
-            int bubbleHeight = lines.size() * 10 + 10;
+        context.getMatrices().push();
+        context.getMatrices().translate(0, 0, 400);
 
-            context.fill(bubbleX, bubbleY, bubbleX + BUBBLE_WIDTH, bubbleY + bubbleHeight, 0xDD000000);
-            context.fill(bubbleX, bubbleY, bubbleX + BUBBLE_WIDTH, bubbleY + 1, 0xFFFFFFFF);
+        List<OrderedText> lines = this.textRenderer.wrapLines(
+                Text.literal(INFO[infoIndex]), TEXT_WIDTH);
+        int boxHeight = lines.size() * 10 + 8;
 
-            int lineY = bubbleY + 5;
-            for (OrderedText line : lines) {
-                context.drawTextWithShadow(this.textRenderer, line, bubbleX + 6, lineY, 0xFFFFFF);
-                lineY += 10;
+        // Put the box to the right of the icon if it fits, otherwise to the left
+        boolean rightSide = anchorX + GAP + ARROW_LENGTH + BOX_WIDTH < this.width;
+        int boxX = rightSide
+                ? anchorX + GAP + ARROW_LENGTH
+                : anchorX - GAP - ARROW_LENGTH - BOX_WIDTH;
+
+        // Center the box on the icon, keeping it on screen
+        int boxY = anchorY - boxHeight / 2;
+        boxY = Math.max(4, Math.min(boxY, this.height - boxHeight - 4));
+
+        int boxColor = 0xEE000000;
+        int borderColor = 0xFFFFFFFF;
+        context.fill(boxX, boxY, boxX + BOX_WIDTH, boxY + boxHeight, boxColor);
+        context.fill(boxX, boxY, boxX + BOX_WIDTH, boxY + 1, borderColor);
+        context.fill(boxX, boxY + boxHeight - 1, boxX + BOX_WIDTH, boxY + boxHeight, borderColor);
+        context.fill(boxX, boxY, boxX + 1, boxY + boxHeight, borderColor);
+        context.fill(boxX + BOX_WIDTH - 1, boxY, boxX + BOX_WIDTH, boxY + boxHeight, borderColor);
+
+        // Arrow from the box edge to the icon
+        if (rightSide) {
+            int tipX = anchorX + GAP / 2;
+            for (int k = 0; k < ARROW_LENGTH; k++) {
+                context.fill(tipX + k, anchorY - k, tipX + k + 1, anchorY + k + 1, borderColor);
+            }
+        } else {
+            int tipX = anchorX - GAP / 2;
+            for (int k = 0; k < ARROW_LENGTH; k++) {
+                context.fill(tipX - k - 1, anchorY - k, tipX - k, anchorY + k + 1, borderColor);
             }
         }
+
+        int lineY = boxY + 4;
+        for (OrderedText line : lines) {
+            context.drawTextWithShadow(this.textRenderer, line, boxX + 6, lineY, 0xFFFFFF);
+            lineY += 10;
+        }
+
+        context.getMatrices().pop();
     }
 
     @Override
