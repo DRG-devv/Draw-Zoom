@@ -65,7 +65,7 @@ public class BowZoomScreen extends Screen {
                    Text.literal(INFO[infoIndex]), TEXT_WIDTH);
 
             int bubbleX = this.width / 2 - BUBBLE_WIDTH / 2;
-            int bubbleY = this.height / 2 + 90;
+                        int bubbleY = 20;
             int bubbleHeight = lines.size() * 10 + 10;
 
             context.fill(bubbleX, bubbleY, bubbleX + BUBBLE_WIDTH, bubbleY + bubbleHeight, 0xDD000000);
