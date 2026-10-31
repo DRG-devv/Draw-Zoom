@@ -8,7 +8,8 @@
   "license": "MIT",
   "environment": "client",
   "entrypoints": {
-    "client": ["com.example.bowzoom.BowZoomClient"]
+    "client": ["com.example.bowzoom.BowZoomClient"],
+    "modmenu": ["com.example.bowzoom.BowZoomModMenu"]
   },
   "mixins": ["bowzoom.mixins.json"],
   "depends": {
