@@ -76,9 +76,6 @@ public class BowZoomScreen extends Screen {
             return;
         }
 
-        context.getMatrices().push();
-        context.getMatrices().translate(0, 0, 400);
-
         List<OrderedText> lines = this.textRenderer.wrapLines(
                 Text.literal(INFO[infoIndex]), TEXT_WIDTH);
         int boxHeight = lines.size() * 10 + 8;
@@ -119,8 +116,6 @@ public class BowZoomScreen extends Screen {
             context.drawTextWithShadow(this.textRenderer, line, boxX + 6, lineY, 0xFFFFFF);
             lineY += 10;
         }
-
-        context.getMatrices().pop();
     }
 
     @Override
