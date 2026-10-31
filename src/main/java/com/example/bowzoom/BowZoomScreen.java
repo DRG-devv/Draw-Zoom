@@ -8,8 +8,10 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.PressableWidget;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.input.AbstractInput;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class BowZoomScreen extends Screen {
@@ -55,8 +57,13 @@ public class BowZoomScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         if (infoIndex >= 0) {
-            context.drawCenteredTextWithShadow(this.textRenderer,
-                    Text.literal(INFO[infoIndex]), this.width / 2, this.height / 2 + 125, 0xFFFFFF);
+            List<OrderedText> lines = this.textRenderer.wrapLines(Text.literal(INFO[infoIndex]), this.width - 40);
+            int lineY = this.height - 20 - lines.size() * 10;
+            for (OrderedText line : lines) {
+                int lineX = this.width / 2 - this.textRenderer.getWidth(line) / 2;
+                context.drawTextWithShadow(this.textRenderer, line, lineX, lineY, 0xFFFFFF);
+                lineY += 10;
+            }
         }
     }
 
