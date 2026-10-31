@@ -1,5 +1,6 @@
 package com.example.bowzoom;
 
+import net.minecraft.client.input.AbstractInput;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -89,8 +90,8 @@ public class BowZoomScreen extends Screen {
                     Text.literal("i"), cx, getY() + 1, 0xFF000000);
         }
 
-        @Override
-        public void onPress() {
+                @Override
+        public void onPress(AbstractInput input) {
             action.run();
         }
     }
