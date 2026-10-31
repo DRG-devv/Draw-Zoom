@@ -113,7 +113,7 @@ public class BowZoomScreen extends Screen {
 
         int lineY = boxY + 4;
         for (OrderedText line : lines) {
-            context.drawTextWithShadow(this.textRenderer, line, boxX + 6, lineY, 0xFFFFFF);
+                        context.drawTextWithShadow(this.textRenderer, line, boxX + 6, lineY, 0xFFFFFFFF);
             lineY += 10;
         }
     }
