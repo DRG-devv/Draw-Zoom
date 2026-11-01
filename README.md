@@ -1,5 +1,11 @@
 # Draw Zoom
 
+[
+
+![Modrinth](https://img.shields.io/badge/Modrinth-Draw%20Zoom-1bd96a)
+
+](https://modrinth.com/mod/draw-zoom)
+
 Zoom in while drawing a bow or trident, with adjustable strength, speed, and trident charge time.
 
 ## Features
@@ -19,9 +25,11 @@ Zoom in while drawing a bow or trident, with adjustable strength, speed, and tri
 
 ## Installation
 
-1. Download the zip from the latest release and extract it.
+1. Download the zip from the [latest release](../../releases/latest) and extract it.
 2. Place `draw-zoom-1.0.0.jar` in your `.minecraft/mods` folder, along with Fabric API.
 3. Launch the game with Fabric 1.21.11.
+
+Or download it directly from [Modrinth](https://modrinth.com/mod/draw-zoom).
 
 ## Settings
 
