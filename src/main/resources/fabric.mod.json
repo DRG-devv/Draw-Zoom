@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "name": "Bow Zoom",
   "description": "Bedrock-style zoom while drawing a bow or trident.",
+    "icon": "assets/bowzoom/icon.png",
   "authors": ["you"],
   "license": "MIT",
   "environment": "client",
